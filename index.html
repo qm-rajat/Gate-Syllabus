@@ -5,25 +5,134 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Gate Syllabus</title>
 <style>
+  :root {
+    --primary: #0b3d91;
+    --secondary: #3759e6;
+    --bg: #f5faff;
+    --bg-gradient: linear-gradient(120deg, #e0eaff 0%, #f5faff 100%);
+    --container-bg: rgba(255,255,255,0.98);
+    --table-header: linear-gradient(90deg, #e3edff 0%, #f2f6ff 100%);
+    --text: #222;
+    --accent: #e9f0ff;
+    --border: #e3e8f0;
+    --weightage-bg: #0b3d91;
+    --weightage-text: #fff;
+    --tree-anim: 0.35s cubic-bezier(.4,2,.6,1);
+  }
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f5faff;
-    margin: 20px;
-    color: #222;
+    background: var(--bg-gradient);
+    margin: 0;
+    color: var(--text);
+    min-height: 100vh;
+    transition: background 0.3s, color 0.3s;
   }
   h1 {
     text-align: center;
-    color: #0b3d91;
-    margin-bottom: 20px;
+    color: var(--primary);
+    margin: 32px 0 16px 0;
+    letter-spacing: 1px;
+    font-size: 2.5rem;
   }
-  .tree-container {
-    max-width: 900px;
-    margin: 0 auto;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-    padding: 20px 30px;
+  .top-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    position: sticky;
+    top: 0;
+    background: var(--bg-gradient);
+    z-index: 10;
+    padding: 12px 0 0 0;
   }
+  .search-bar {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1.5px solid var(--primary);
+    font-size: 1rem;
+    outline: none;
+    min-width: 200px;
+    background: #fff;
+    color: var(--text);
+    transition: border 0.2s;
+  }
+  .search-bar:focus {
+    border: 2px solid var(--secondary);
+  }
+  .filter-dropdown {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1.5px solid var(--primary);
+    font-size: 1rem;
+    background: #fff;
+    color: var(--text);
+    outline: none;
+    min-width: 160px;
+  }
+  .toggle-bar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 32px;
+    gap: 16px;
+  }
+  .toggle-btn {
+    background: #fff;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    font-weight: 600;
+    padding: 10px 32px;
+    border-radius: 24px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background 0.2s, color 0.2s;
+    outline: none;
+  }
+  .toggle-btn.active, .toggle-btn:hover {
+    background: var(--primary);
+    color: #fff;
+  }
+  .progress-bar-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 24px auto;
+    background: #e3edff;
+    border-radius: 16px;
+    height: 22px;
+    box-shadow: 0 2px 8px rgba(11,61,145,0.07);
+    overflow: hidden;
+    position: relative;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+    border-radius: 16px 0 0 16px;
+    transition: width 0.4s;
+    color: #fff;
+    font-weight: 600;
+    text-align: center;
+    line-height: 22px;
+    font-size: 1rem;
+  }
+  .container {
+    max-width: 1100px;
+    margin: 0 auto 40px auto;
+    background: var(--container-bg);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+    padding: 32px 24px 40px 24px;
+    min-height: 300px;
+    transition: box-shadow 0.3s;
+  }
+  @media (max-width: 700px) {
+    .container { padding: 16px 4vw; }
+    h1 { font-size: 1.5rem; }
+    .toggle-btn { font-size: 1rem; padding: 8px 12px; }
+    .progress-bar-container { height: 18px; }
+    .progress-bar { font-size: 0.9rem; line-height: 18px; }
+  }
+  /* Tree Styles */
   ul.tree {
     list-style: none;
     padding-left: 1rem;
@@ -61,7 +170,7 @@
     left: 0;
     width: 14px;
     height: 14px;
-    border: 3px solid #0b3d91;
+    border: 3px solid var(--primary);
     background: white;
     border-radius: 50%;
     z-index: 1;
@@ -95,15 +204,16 @@
     padding: 6px 10px;
     border-radius: 8px;
     transition: background 0.3s ease;
+    position: relative;
   }
   .node-content:hover {
     background: #e3edff;
   }
   .arrow {
-    transition: transform 0.3s ease;
+    transition: transform 0.3s var(--tree-anim);
     margin-right: 10px;
     font-size: 14px;
-    color: #0b3d91;
+    color: var(--primary);
     width: 12px;
     display: inline-flex;
     justify-content: center;
@@ -113,18 +223,43 @@
   .arrow.open {
     transform: rotate(90deg);
   }
+  .node-icon {
+    margin-right: 8px;
+    font-size: 1.2em;
+    vertical-align: middle;
+    opacity: 0.85;
+  }
   .node-text {
     flex-grow: 1;
+    display: flex;
+    align-items: center;
+  }
+  .highlight {
+    background: #ffe066;
+    color: #222;
+    border-radius: 4px;
+    padding: 0 2px;
   }
   .node-week {
     font-weight: 700;
-    color: #0b3d91;
+    color: var(--primary);
   }
   .node-focus {
     font-weight: 600;
-    color: #3759e6;
+    color: var(--secondary);
     margin-left: 6px;
     font-size: 0.95em;
+    display: flex;
+    align-items: center;
+  }
+  .focus-progress {
+    margin-left: 10px;
+    font-size: 0.9em;
+    color: #888;
+    background: #e3edff;
+    border-radius: 8px;
+    padding: 2px 8px;
+    font-weight: 500;
   }
   .node-topics {
     font-size: 0.95em;
@@ -135,7 +270,7 @@
   ul.tree ul {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.4s ease;
+    transition: max-height var(--tree-anim);
     margin-top: 4px;
     padding-left: 0;
   }
@@ -143,8 +278,8 @@
     max-height: 2000px;
   }
   .detail-box {
-    background: #e9f0ff;
-    border-left: 4px solid #0b3d91;
+    background: var(--accent);
+    border-left: 4px solid var(--primary);
     padding: 10px 16px;
     margin: 6px 0 14px 25px;
     border-radius: 6px;
@@ -153,8 +288,8 @@
     line-height: 1.4;
   }
   .weightage {
-    background: #0b3d91;
-    color: #fff;
+    background: var(--weightage-bg);
+    color: var(--weightage-text);
     font-size: 0.9em;
     font-weight: 600;
     padding: 2px 8px;
@@ -163,14 +298,131 @@
     white-space: nowrap;
     user-select: none;
   }
+  .icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 8px;
+    font-size: 1.1em;
+    color: var(--secondary);
+    vertical-align: middle;
+    transition: color 0.2s;
+  }
+  .icon-btn:hover { color: var(--primary); }
+  .show-completed-toggle {
+    margin: 0 0 16px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    color: var(--primary);
+    font-weight: 500;
+  }
+  /* Table Styles (unchanged) */
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(11,61,145,0.07);
+  }
+  th, td {
+    border: 1px solid var(--border);
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 1rem;
+  }
+  th {
+    background: var(--table-header);
+    color: var(--primary);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  tr:hover td {
+    background: var(--bg);
+    transition: background 0.2s;
+  }
+  @media (max-width: 700px) {
+    th, td { font-size: 0.95rem; padding: 7px 6px; }
+    table { font-size: 0.95rem; }
+  }
+  .export-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    justify-content: flex-end;
+  }
 </style>
 </head>
 <body>
 <h1>Gate Syllabus</h1>
-<div class="tree-container">
+<div class="top-bar">
+  <input class="search-bar" id="searchInput" type="text" placeholder="Search topics, weeks, focus..." />
+  <select class="filter-dropdown" id="focusFilter">
+    <option value="">All Focus Areas</option>
+    <!-- Options will be populated by JS -->
+  </select>
+</div>
+<div class="progress-bar-container">
+  <div class="progress-bar" id="progressBar" style="width:0%">0% Complete</div>
+</div>
+<div class="toggle-bar">
+  <button class="toggle-btn active" id="treeBtn">Tree View</button>
+  <button class="toggle-btn" id="tableBtn">Table View</button>
+</div>
+<div class="container" id="treeContainer">
+  <div style="display:flex; justify-content: flex-end; gap:10px; margin-bottom:10px;">
+    <button class="toggle-btn" id="expandAllBtn" style="padding:6px 18px; font-size:1rem;">Expand All</button>
+    <button class="toggle-btn" id="collapseAllBtn" style="padding:6px 18px; font-size:1rem;">Collapse All</button>
+  </div>
+  <div class="show-completed-toggle">
+    <input type="checkbox" id="showCompleted" checked />
+    <label for="showCompleted">Show Completed Weeks</label>
+  </div>
   <ul class="tree" id="treeRoot"></ul>
 </div>
-
+<div class="container" id="tableContainer" style="display:none;">
+  <div class="export-bar">
+    <button class="icon-btn" id="exportCsvBtn" title="Export as CSV">📄</button>
+    <button class="icon-btn" id="exportPdfBtn" title="Export as PDF">🖨️</button>
+    <button class="icon-btn" id="printBtn" title="Print Table">🖨️</button>
+  </div>
+  <div class="table-container">
+    <h2 style="text-align:center; color:var(--primary); margin-bottom:18px;">Course Syllabus Table</h2>
+    <table id="syllabusTable">
+      <thead>
+        <tr>
+          <th>Done</th>
+          <th>Week</th>
+          <th>Dates</th>
+          <th>Focus Area</th>
+          <th>Important Topics</th>
+          <th>Approx. Weightage</th>
+          <th>Detailed Syllabus</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Table rows will be inserted by JS -->
+      </tbody>
+    </table>
+  </div>
+</div>
+<!-- Notes Modal Placeholder -->
+<div id="notesModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); align-items:center; justify-content:center; z-index:1000;">
+  <div style="background:#fff; color:#222; border-radius:12px; padding:24px; min-width:300px; max-width:90vw; box-shadow:0 4px 24px rgba(0,0,0,0.18); position:relative;">
+    <button id="closeNotesBtn" style="position:absolute; top:8px; right:12px; background:none; border:none; font-size:1.3em; cursor:pointer;">✖️</button>
+    <h3 id="notesModalTitle">Notes</h3>
+    <textarea id="notesTextarea" style="width:100%; min-height:100px; border-radius:8px; border:1px solid #ccc; padding:8px;"></textarea>
+    <button id="saveNotesBtn" style="margin-top:12px; padding:8px 18px; border-radius:8px; background:var(--primary); color:#fff; border:none; font-weight:600; cursor:pointer;">Save</button>
+  </div>
+</div>
 <script>
 const syllabusData = [
   {week:"1",dates:"Aug 1 - Aug 7",focusArea:"Data Structures",importantTopics:"Arrays, Linked Lists, Stacks, Queues",weightage:"15%",detailed:"Arrays, Linked Lists, Stack & Queue operations, Circular Queues, Applications of data structures"},
@@ -199,6 +451,69 @@ const syllabusData = [
   {week:"24",dates:"Jan 22 - Jan 31",focusArea:"Final Revision & Strategy",importantTopics:"Focus on weak topics + Exam strategy",weightage:"-",detailed:"Quick revision, time management, question selection strategy, stress management"},
 ];
 
+// --- Progress Tracking ---
+let progress = JSON.parse(localStorage.getItem('syllabusProgress') || '{}');
+function updateProgressBar() {
+  const total = syllabusData.length;
+  const done = Object.values(progress).filter(Boolean).length;
+  const percent = Math.round((done/total)*100);
+  const bar = document.getElementById('progressBar');
+  bar.style.width = percent + '%';
+  bar.textContent = percent + '% Complete';
+}
+
+// --- Search and Filter ---
+const searchInput = document.getElementById('searchInput');
+const focusFilter = document.getElementById('focusFilter');
+function getFilteredData() {
+  const search = searchInput.value.toLowerCase();
+  const focus = focusFilter.value;
+  return syllabusData.filter(row => {
+    const matchesSearch =
+      row.week.toLowerCase().includes(search) ||
+      row.dates.toLowerCase().includes(search) ||
+      row.focusArea.toLowerCase().includes(search) ||
+      row.importantTopics.toLowerCase().includes(search) ||
+      row.detailed.toLowerCase().includes(search);
+    const matchesFocus = !focus || row.focusArea === focus;
+    return matchesSearch && matchesFocus;
+  });
+}
+function populateFocusFilter() {
+  const focusAreas = Array.from(new Set(syllabusData.map(r=>r.focusArea)));
+  focusAreas.forEach(focus => {
+    const opt = document.createElement('option');
+    opt.value = focus;
+    opt.textContent = focus;
+    focusFilter.appendChild(opt);
+  });
+}
+populateFocusFilter();
+
+// --- Tree View ---
+const focusIcons = {
+  'Data Structures': '🗂️',
+  'Data Structures & Algorithms': '🧮',
+  'Algorithms': '🔢',
+  'Operating Systems': '💻',
+  'DBMS': '🗄️',
+  'Computer Networks': '🌐',
+  'Theory of Computation': '🧠',
+  'Compiler Design': '📝',
+  'Digital Logic': '🔌',
+  'Software Engineering': '🛠️',
+  'Discrete Mathematics': '📐',
+  'Programming Practice': '💡',
+  'Aptitude & Reasoning': '🧩',
+  'Revision & Mock Tests': '✅',
+  'Final Revision & Strategy': '🏁',
+};
+const showCompletedToggle = document.getElementById('showCompleted');
+function highlightText(text, search) {
+  if (!search) return text;
+  const regex = new RegExp(`(${search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+  return text.replace(regex, '<span class="highlight">$1</span>');
+}
 function groupByFocusArea(data) {
   const map = {};
   data.forEach(item => {
@@ -207,15 +522,13 @@ function groupByFocusArea(data) {
   });
   return map;
 }
-
-function createNode(text, hasChildren=true) {
+function createNode(text, hasChildren=true, tooltip=null) {
   const span = document.createElement('span');
   span.className = 'node-content';
-  
   if (hasChildren){
     const arrow = document.createElement('span');
     arrow.className = 'arrow';
-    arrow.textContent = '▶';
+    arrow.textContent = '\u25b6';
     span.appendChild(arrow);
   } else {
     const dummy = document.createElement('span');
@@ -223,52 +536,52 @@ function createNode(text, hasChildren=true) {
     dummy.style.width = '12px';
     span.appendChild(dummy);
   }
-
   const textSpan = document.createElement('span');
   textSpan.className = 'node-text';
   textSpan.innerHTML = text;
   span.appendChild(textSpan);
-
+  if (tooltip) {
+    span.title = tooltip;
+  }
   return span;
 }
-
-function buildTree(containerId) {
+function buildTree(containerId, data) {
   const root = document.getElementById(containerId);
   root.innerHTML = "";
-
-  const grouped = groupByFocusArea(syllabusData);
-
+  const grouped = groupByFocusArea(data);
+  const search = searchInput.value.toLowerCase();
+  const showCompleted = showCompletedToggle.checked;
   for (const [focusArea, weeks] of Object.entries(grouped)) {
+    // Progress for this focus area
+    const total = weeks.length;
+    const done = weeks.filter(w => progress[w.week]).length;
+    const percent = Math.round((done/total)*100);
+    // Icon
+    const icon = focusIcons[focusArea] || '📚';
+    // Focus area node
     const faLi = document.createElement('li');
-    const faNode = createNode(`<span class="node-focus">${focusArea}</span>`);
+    const faNode = createNode(
+      `<span class="node-focus"><span class="node-icon">${icon}</span>${highlightText(focusArea, search)}</span><span class="focus-progress" title="${done} of ${total} weeks completed">${percent}%</span>`
+    );
     faLi.appendChild(faNode);
-
     const weeksUl = document.createElement('ul');
     weeksUl.classList.add("closed");
-
     weeks.forEach(week => {
+      if (!showCompleted && progress[week.week]) return;
       const wLi = document.createElement('li');
-      const wNodeText = `<span class="node-week">Week ${week.week} (${week.dates})</span> <span class="weightage">${week.weightage}</span>`;
-      const wNode = createNode(wNodeText);
+      const wNodeText = `<span class="node-week">Week ${highlightText(week.week, search)} (${highlightText(week.dates, search)})</span> <span class="weightage">${highlightText(week.weightage, search)}</span>`;
+      const wNode = createNode(wNodeText, true, week.importantTopics);
       wLi.appendChild(wNode);
-
       const detailsUl = document.createElement('ul');
       detailsUl.classList.add("closed");
-
       const impLi = document.createElement('li');
-      impLi.innerHTML = `<div class="node-topics"><strong>Important Topics:</strong> ${week.importantTopics}</div>`;
+      impLi.innerHTML = `<div class="node-topics"><strong>Important Topics:</strong> ${highlightText(week.importantTopics, search)}</div>`;
       impLi.style.paddingLeft = '36px';
-
       const detLi = document.createElement('li');
-      detLi.innerHTML = `<div class="detail-box">${week.detailed}</div>`;
-
+      detLi.innerHTML = `<div class="detail-box">${highlightText(week.detailed, search)}</div>`;
       detailsUl.appendChild(impLi);
       detailsUl.appendChild(detLi);
-
       wLi.appendChild(detailsUl);
-
-      weeksUl.appendChild(wLi);
-
       // Week node toggle
       wNode.addEventListener('click', e => {
         e.stopPropagation();
@@ -280,10 +593,54 @@ function buildTree(containerId) {
           wNode.querySelector('.arrow').classList.add('open');
         }
       });
+      // Progress checkbox
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = !!progress[week.week];
+      cb.style.marginLeft = '10px';
+      cb.addEventListener('change', e => {
+        progress[week.week] = cb.checked;
+        localStorage.setItem('syllabusProgress', JSON.stringify(progress));
+        updateProgressBar();
+        buildTable();
+        buildTree('treeRoot', getFilteredData());
+      });
+      wNode.appendChild(cb);
+      // Notes icon
+      const notesBtn = document.createElement('button');
+      notesBtn.className = 'icon-btn';
+      notesBtn.innerHTML = '📝';
+      notesBtn.title = 'Add/View Notes';
+      notesBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        openNotesModal(week.week);
+      });
+      wNode.appendChild(notesBtn);
+      // Resources icon
+      const resourcesBtn = document.createElement('button');
+      resourcesBtn.className = 'icon-btn';
+      resourcesBtn.innerHTML = '🔗';
+      resourcesBtn.title = 'View Resources';
+      resourcesBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        openResourcesModal(week.week);
+      });
+      wNode.appendChild(resourcesBtn);
+      // Questions icon
+      const questionsBtn = document.createElement('button');
+      questionsBtn.className = 'icon-btn';
+      questionsBtn.innerHTML = '❓';
+      questionsBtn.title = 'View Questions';
+      questionsBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        openQuestionsModal(week.week);
+      });
+      wNode.appendChild(questionsBtn);
+      // Tooltip for more info
+      wNode.title = week.detailed;
+      weeksUl.appendChild(wLi);
     });
-
     faLi.appendChild(weeksUl);
-
     // Focus area toggle
     faNode.addEventListener('click', e => {
       e.stopPropagation();
@@ -295,13 +652,282 @@ function buildTree(containerId) {
         faNode.querySelector('.arrow').classList.add('open');
       }
     });
-
     root.appendChild(faLi);
   }
 }
+// Expand/Collapse All
+const expandAllBtn = document.getElementById('expandAllBtn');
+const collapseAllBtn = document.getElementById('collapseAllBtn');
+expandAllBtn.onclick = () => {
+  document.querySelectorAll('#treeRoot ul').forEach(ul => ul.classList.add('open'));
+  document.querySelectorAll('#treeRoot .arrow').forEach(a => a.classList.add('open'));
+};
+collapseAllBtn.onclick = () => {
+  document.querySelectorAll('#treeRoot ul').forEach(ul => ul.classList.remove('open'));
+  document.querySelectorAll('#treeRoot .arrow').forEach(a => a.classList.remove('open'));
+};
+showCompletedToggle.addEventListener('change', () => {
+  buildTree('treeRoot', getFilteredData());
+});
+// Keyboard navigation (basic)
+document.getElementById('treeRoot').addEventListener('keydown', function(e) {
+  const focusable = Array.from(document.querySelectorAll('.node-content'));
+  let idx = focusable.indexOf(document.activeElement);
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (idx < focusable.length - 1) focusable[idx + 1].focus();
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (idx > 0) focusable[idx - 1].focus();
+  } else if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    document.activeElement.click();
+  }
+});
+// Make nodes focusable
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    document.querySelectorAll('.node-content').forEach(n => n.tabIndex = 0);
+  }, 100);
+});
+// --- Table View (unchanged) ---
+function buildTable() {
+  const tbody = document.querySelector('#syllabusTable tbody');
+  tbody.innerHTML = '';
+  getFilteredData().forEach(row => {
+    const tr = document.createElement('tr');
+    // Progress checkbox
+    const cbTd = document.createElement('td');
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = !!progress[row.week];
+    cb.addEventListener('change', e => {
+      progress[row.week] = cb.checked;
+      localStorage.setItem('syllabusProgress', JSON.stringify(progress));
+      updateProgressBar();
+      buildTree('treeRoot', getFilteredData());
+    });
+    cbTd.appendChild(cb);
+    tr.appendChild(cbTd);
+    // Data columns
+    tr.innerHTML += `
+      <td>${row.week}</td>
+      <td>${row.dates}</td>
+      <td>${row.focusArea}</td>
+      <td>${row.importantTopics}</td>
+      <td>${row.weightage}</td>
+      <td>${row.detailed}</td>
+    `;
+    // Notes icon
+    const notesTd = document.createElement('td');
+    const notesBtn = document.createElement('button');
+    notesBtn.className = 'icon-btn';
+    notesBtn.innerHTML = '📝';
+    notesBtn.title = 'Add/View Notes';
+    notesBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      openNotesModal(row.week);
+    });
+    notesTd.appendChild(notesBtn);
+    tr.appendChild(notesTd);
+    // Resources icon
+    const resourcesTd = document.createElement('td');
+    const resourcesBtn = document.createElement('button');
+    resourcesBtn.className = 'icon-btn';
+    resourcesBtn.innerHTML = '🔗';
+    resourcesBtn.title = 'View Resources';
+    resourcesBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      openResourcesModal(row.week);
+    });
+    resourcesTd.appendChild(resourcesBtn);
+    tr.appendChild(resourcesTd);
+    // Questions icon
+    const questionsTd = document.createElement('td');
+    const questionsBtn = document.createElement('button');
+    questionsBtn.className = 'icon-btn';
+    questionsBtn.innerHTML = '❓';
+    questionsBtn.title = 'View Questions';
+    questionsBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      openQuestionsModal(row.week);
+    });
+    questionsTd.appendChild(questionsBtn);
+    tr.appendChild(questionsTd);
+    tbody.appendChild(tr);
+  });
+}
+// --- Notes Modal (unchanged) ---
+const notesModal = document.getElementById('notesModal');
+const notesTextarea = document.getElementById('notesTextarea');
+const notesModalTitle = document.getElementById('notesModalTitle');
+const closeNotesBtn = document.getElementById('closeNotesBtn');
+const saveNotesBtn = document.getElementById('saveNotesBtn');
+let currentNotesWeek = null;
+function openNotesModal(week) {
+  currentNotesWeek = week;
+  notesModalTitle.textContent = `Notes for Week ${week}`;
+  notesTextarea.value = localStorage.getItem('notes_' + week) || '';
+  notesModal.style.display = 'flex';
+}
+closeNotesBtn.onclick = () => { notesModal.style.display = 'none'; };
+saveNotesBtn.onclick = () => {
+  if(currentNotesWeek) {
+    localStorage.setItem('notes_' + currentNotesWeek, notesTextarea.value);
+    notesModal.style.display = 'none';
+  }
+};
+notesModal.onclick = e => { if(e.target === notesModal) notesModal.style.display = 'none'; };
 
-buildTree("treeRoot");
+// --- Resources Modal (new) ---
+const resourcesModal = document.createElement('div');
+resourcesModal.id = 'resourcesModal';
+resourcesModal.style.display = 'none';
+resourcesModal.style.position = 'fixed';
+resourcesModal.style.top = '0';
+resourcesModal.style.left = '0';
+resourcesModal.style.width = '100vw';
+resourcesModal.style.height = '100vh';
+resourcesModal.style.background = 'rgba(0,0,0,0.4)';
+resourcesModal.style.alignItems = 'center';
+resourcesModal.style.justifyContent = 'center';
+resourcesModal.style.zIndex = '1000';
+document.body.appendChild(resourcesModal);
+
+const resourcesModalContent = document.createElement('div');
+resourcesModalContent.style.background = '#fff';
+resourcesModalContent.style.color = '#222';
+resourcesModalContent.style.borderRadius = '12px';
+resourcesModalContent.style.padding = '24px';
+resourcesModalContent.style.minWidth = '300px';
+resourcesModalContent.style.maxWidth = '90vw';
+resourcesModalContent.style.boxShadow = '0 4px 24px rgba(0,0,0,0.18)';
+resourcesModalContent.style.position = 'relative';
+resourcesModalContent.innerHTML = `
+  <button id="closeResourcesBtn" style="position:absolute; top:8px; right:12px; background:none; border:none; font-size:1.3em; cursor:pointer;">✖️</button>
+  <h3 id="resourcesModalTitle">Resources for Week ${currentNotesWeek}</h3>
+  <div id="resourcesTextarea" style="width:100%; min-height:100px; border-radius:8px; border:1px solid #ccc; padding:8px; white-space:pre-wrap; word-wrap:break-word;"></div>
+  <button id="saveResourcesBtn" style="margin-top:12px; padding:8px 18px; border-radius:8px; background:var(--primary); color:#fff; border:none; font-weight:600; cursor:pointer;">Save</button>
+`;
+resourcesModal.appendChild(resourcesModalContent);
+
+const resourcesTextarea = document.getElementById('resourcesTextarea');
+const resourcesModalTitle = document.getElementById('resourcesModalTitle');
+const closeResourcesBtn = document.getElementById('closeResourcesBtn');
+const saveResourcesBtn = document.getElementById('saveResourcesBtn');
+
+function openResourcesModal(week) {
+  currentNotesWeek = week; // Reusing currentNotesWeek for consistency
+  resourcesModalTitle.textContent = `Resources for Week ${week}`;
+  resourcesTextarea.value = localStorage.getItem('resources_' + week) || '';
+  resourcesModal.style.display = 'flex';
+}
+closeResourcesBtn.onclick = () => { resourcesModal.style.display = 'none'; };
+saveResourcesBtn.onclick = () => {
+  if(currentNotesWeek) {
+    localStorage.setItem('resources_' + currentNotesWeek, resourcesTextarea.value);
+    resourcesModal.style.display = 'none';
+  }
+};
+resourcesModal.onclick = e => { if(e.target === resourcesModal) resourcesModal.style.display = 'none'; };
+
+// --- Questions Modal (new) ---
+const questionsModal = document.createElement('div');
+questionsModal.id = 'questionsModal';
+questionsModal.style.display = 'none';
+questionsModal.style.position = 'fixed';
+questionsModal.style.top = '0';
+questionsModal.style.left = '0';
+questionsModal.style.width = '100vw';
+questionsModal.style.height = '100vh';
+questionsModal.style.background = 'rgba(0,0,0,0.4)';
+questionsModal.style.alignItems = 'center';
+questionsModal.style.justifyContent = 'center';
+questionsModal.style.zIndex = '1000';
+document.body.appendChild(questionsModal);
+
+const questionsModalContent = document.createElement('div');
+questionsModalContent.style.background = '#fff';
+questionsModalContent.style.color = '#222';
+questionsModalContent.style.borderRadius = '12px';
+questionsModalContent.style.padding = '24px';
+questionsModalContent.style.minWidth = '300px';
+questionsModalContent.style.maxWidth = '90vw';
+questionsModalContent.style.boxShadow = '0 4px 24px rgba(0,0,0,0.18)';
+questionsModalContent.style.position = 'relative';
+questionsModalContent.innerHTML = `
+  <button id="closeQuestionsBtn" style="position:absolute; top:8px; right:12px; background:none; border:none; font-size:1.3em; cursor:pointer;">✖️</button>
+  <h3 id="questionsModalTitle">Questions for Week ${currentNotesWeek}</h3>
+  <div id="questionsTextarea" style="width:100%; min-height:100px; border-radius:8px; border:1px solid #ccc; padding:8px; white-space:pre-wrap; word-wrap:break-word;"></div>
+  <button id="saveQuestionsBtn" style="margin-top:12px; padding:8px 18px; border-radius:8px; background:var(--primary); color:#fff; border:none; font-weight:600; cursor:pointer;">Save</button>
+`;
+questionsModal.appendChild(questionsModalContent);
+
+const questionsTextarea = document.getElementById('questionsTextarea');
+const questionsModalTitle = document.getElementById('questionsModalTitle');
+const closeQuestionsBtn = document.getElementById('closeQuestionsBtn');
+const saveQuestionsBtn = document.getElementById('saveQuestionsBtn');
+
+function openQuestionsModal(week) {
+  currentNotesWeek = week; // Reusing currentNotesWeek for consistency
+  questionsModalTitle.textContent = `Questions for Week ${week}`;
+  questionsTextarea.value = localStorage.getItem('questions_' + week) || '';
+  questionsModal.style.display = 'flex';
+}
+closeQuestionsBtn.onclick = () => { questionsModal.style.display = 'none'; };
+saveQuestionsBtn.onclick = () => {
+  if(currentNotesWeek) {
+    localStorage.setItem('questions_' + currentNotesWeek, questionsTextarea.value);
+    questionsModal.style.display = 'none';
+  }
+};
+questionsModal.onclick = e => { if(e.target === questionsModal) questionsModal.style.display = 'none'; };
+
+// --- Table Export/Print Placeholders (unchanged) ---
+document.getElementById('exportCsvBtn').onclick = () => { alert('CSV export coming soon!'); };
+document.getElementById('exportPdfBtn').onclick = () => { alert('PDF export coming soon!'); };
+document.getElementById('printBtn').onclick = () => { window.print(); };
+// --- Toggle Views (unchanged) ---
+const treeBtn = document.getElementById('treeBtn');
+const tableBtn = document.getElementById('tableBtn');
+const treeContainer = document.getElementById('treeContainer');
+const tableContainer = document.getElementById('tableContainer');
+treeBtn.addEventListener('click', () => {
+  treeBtn.classList.add('active');
+  tableBtn.classList.remove('active');
+  treeContainer.style.display = '';
+  tableContainer.style.display = 'none';
+});
+tableBtn.addEventListener('click', () => {
+  tableBtn.classList.add('active');
+  treeBtn.classList.remove('active');
+  treeContainer.style.display = 'none';
+  tableContainer.style.display = '';
+});
+// --- Search/Filter Events (unchanged) ---
+searchInput.addEventListener('input', () => {
+  buildTree('treeRoot', getFilteredData());
+  buildTable();
+});
+focusFilter.addEventListener('change', () => {
+  buildTree('treeRoot', getFilteredData());
+  buildTable();
+});
+// --- Initial Render ---
+updateProgressBar();
+buildTree('treeRoot', getFilteredData());
+buildTable();
+</script>
+<div class="container" style="margin-bottom: 40px;">
+  <h2 style="color: var(--primary); text-align:center;">Global Study Notes</h2>
+  <textarea id="globalNotes" style="width:100%; min-height:120px; border-radius:10px; border:1.5px solid var(--primary); padding:12px; font-size:1.1em; margin-top:10px;"></textarea>
+</div>
+<script>
+const globalNotes = document.getElementById('globalNotes');
+globalNotes.value = localStorage.getItem('globalNotes') || '';
+globalNotes.addEventListener('input', () => {
+  localStorage.setItem('globalNotes', globalNotes.value);
+});
 </script>
 </body>
-</html>
-
+</html> 
