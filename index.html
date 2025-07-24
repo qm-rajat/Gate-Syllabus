@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gate Syllabus</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5faff;
+    margin: 20px;
+    color: #222;
+  }
+  h1 {
+    text-align: center;
+    color: #0b3d91;
+    margin-bottom: 20px;
+  }
+  .tree-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    padding: 20px 30px;
+  }
+  ul.tree {
+    list-style: none;
+    padding-left: 1rem;
+    position: relative;
+  }
+  ul.tree::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 15px;
+    bottom: 0;
+    width: 2px;
+    background: #9bb9f3;
+    border-radius: 1px;
+  }
+  ul.tree ul::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 15px;
+    bottom: 0;
+    width: 2px;
+    background: #c4dafc;
+    border-radius: 1px;
+  }
+  ul.tree li {
+    margin: 0;
+    padding: 0 0 0 40px;
+    position: relative;
+  }
+  ul.tree li::before {
+    content: '';
+    position: absolute;
+    top: 16px;
+    left: 0;
+    width: 14px;
+    height: 14px;
+    border: 3px solid #0b3d91;
+    background: white;
+    border-radius: 50%;
+    z-index: 1;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+  ul.tree li::after {
+    content: '';
+    position: absolute;
+    top: 23px;
+    left: 14px;
+    width: 20px;
+    height: 2px;
+    background: #9bb9f3;
+    border-radius: 2px;
+  }
+  ul.tree li:last-child::after {
+    display: none;
+  }
+  ul.tree > li::before {
+    left: -7px;
+  }
+  ul.tree > li::after {
+    left: 7px;
+    width: 12px;
+  }
+  .node-content {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+  }
+  .node-content:hover {
+    background: #e3edff;
+  }
+  .arrow {
+    transition: transform 0.3s ease;
+    margin-right: 10px;
+    font-size: 14px;
+    color: #0b3d91;
+    width: 12px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+  }
+  .arrow.open {
+    transform: rotate(90deg);
+  }
+  .node-text {
+    flex-grow: 1;
+  }
+  .node-week {
+    font-weight: 700;
+    color: #0b3d91;
+  }
+  .node-focus {
+    font-weight: 600;
+    color: #3759e6;
+    margin-left: 6px;
+    font-size: 0.95em;
+  }
+  .node-topics {
+    font-size: 0.95em;
+    color: #444;
+    margin-left: 6px;
+    font-style: italic;
+  }
+  ul.tree ul {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    margin-top: 4px;
+    padding-left: 0;
+  }
+  ul.tree ul.open {
+    max-height: 2000px;
+  }
+  .detail-box {
+    background: #e9f0ff;
+    border-left: 4px solid #0b3d91;
+    padding: 10px 16px;
+    margin: 6px 0 14px 25px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    color: #2a3f6d;
+    line-height: 1.4;
+  }
+  .weightage {
+    background: #0b3d91;
+    color: #fff;
+    font-size: 0.9em;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-left: 12px;
+    white-space: nowrap;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+<h1>Gate Syllabus</h1>
+<div class="tree-container">
+  <ul class="tree" id="treeRoot"></ul>
+</div>
+
+<script>
+const syllabusData = [
+  {week:"1",dates:"Aug 1 - Aug 7",focusArea:"Data Structures",importantTopics:"Arrays, Linked Lists, Stacks, Queues",weightage:"15%",detailed:"Arrays, Linked Lists, Stack & Queue operations, Circular Queues, Applications of data structures"},
+  {week:"2",dates:"Aug 8 - Aug 14",focusArea:"Data Structures",importantTopics:"Trees: BST, AVL, Segment Tree",weightage:"15%",detailed:"Binary Search Trees, AVL Trees, Segment Trees, Tree traversals, Balanced Trees"},
+  {week:"3",dates:"Aug 15 - Aug 21",focusArea:"Data Structures & Algorithms",importantTopics:"Graphs, BFS, DFS, Shortest Path (Dijkstra)",weightage:"15%",detailed:"Graph representations, BFS, DFS, Minimum Spanning Tree, Dijkstra’s, Bellman-Ford"},
+  {week:"4",dates:"Aug 22 - Aug 31",focusArea:"Algorithms",importantTopics:"Sorting Algorithms, Recursion, Divide & Conquer",weightage:"10%",detailed:"Quick Sort, Merge Sort, Heap Sort, Recursion techniques, Backtracking"},
+  {week:"5",dates:"Sep 1 - Sep 7",focusArea:"Operating Systems",importantTopics:"Processes, Threads, Scheduling",weightage:"10%",detailed:"Process states, CPU Scheduling algorithms (FCFS, SJF, Round Robin), Threads, Context Switching"},
+  {week:"6",dates:"Sep 8 - Sep 14",focusArea:"Operating Systems",importantTopics:"Memory Management, Virtual Memory",weightage:"10%",detailed:"Paging, Segmentation, Demand Paging, Thrashing, Page Replacement algorithms"},
+  {week:"7",dates:"Sep 15 - Sep 21",focusArea:"DBMS",importantTopics:"ER Model, Relational Model, SQL Queries",weightage:"10%",detailed:"ER Diagrams, Relational Algebra, SQL DDL/DML, Joins, Nested Queries"},
+  {week:"8",dates:"Sep 22 - Sep 30",focusArea:"DBMS",importantTopics:"Transactions, Concurrency Control",weightage:"10%",detailed:"ACID Properties, Transaction States, Locking protocols, Deadlock prevention, Serializability"},
+  {week:"9",dates:"Oct 1 - Oct 7",focusArea:"Computer Networks",importantTopics:"OSI & TCP/IP Models, IP Addressing",weightage:"10%",detailed:"Layers of OSI and TCP/IP, IPv4/IPv6 addressing, Subnetting, Supernetting"},
+  {week:"10",dates:"Oct 8 - Oct 14",focusArea:"Computer Networks",importantTopics:"Routing Protocols, TCP/UDP",weightage:"10%",detailed:"Static & Dynamic Routing, Distance Vector, Link State, TCP Handshake, UDP protocols"},
+  {week:"11",dates:"Oct 15 - Oct 21",focusArea:"Theory of Computation",importantTopics:"Finite Automata, Regular Expressions",weightage:"5%",detailed:"DFA, NFA, Conversion between NFA and DFA, Regular Expressions, Pumping Lemma"},
+  {week:"12",dates:"Oct 22 - Oct 31",focusArea:"Theory of Computation",importantTopics:"Context-Free Grammars, Pushdown Automata, Turing Machines",weightage:"5%",detailed:"CFG derivations, PDAs, Turing Machine basics, Decidability problems"},
+  {week:"13",dates:"Nov 1 - Nov 7",focusArea:"Compiler Design",importantTopics:"Lexical Analysis, Parsing",weightage:"5%",detailed:"Lexical analyzers, Tokenization, Parsing techniques (LL, LR), Syntax trees"},
+  {week:"14",dates:"Nov 8 - Nov 14",focusArea:"Compiler Design",importantTopics:"Intermediate Code, Symbol Table",weightage:"5%",detailed:"Three-address code, Syntax-directed translation, Symbol tables"},
+  {week:"15",dates:"Nov 15 - Nov 21",focusArea:"Digital Logic",importantTopics:"Logic Gates, Boolean Algebra, Karnaugh Maps",weightage:"5%",detailed:"Basic gates, Boolean laws, Simplification using K-Maps"},
+  {week:"16",dates:"Nov 22 - Nov 30",focusArea:"Digital Logic",importantTopics:"Combinational & Sequential Circuits",weightage:"5%",detailed:"Adders, Multiplexers, Flip-flops, Counters, Registers"},
+  {week:"17",dates:"Dec 1 - Dec 7",focusArea:"Software Engineering",importantTopics:"SDLC, Software Process Models",weightage:"5%",detailed:"Waterfall, Agile, Incremental, Spiral models"},
+  {week:"18",dates:"Dec 8 - Dec 14",focusArea:"Software Engineering",importantTopics:"Software Testing, Quality Assurance",weightage:"5%",detailed:"Testing levels, Types, Metrics, Reviews, Verification & Validation"},
+  {week:"19",dates:"Dec 15 - Dec 21",focusArea:"Discrete Mathematics",importantTopics:"Set Theory, Relations, Functions",weightage:"5%",detailed:"Sets, Subsets, Operations, Types of relations, Properties, Functions"},
+  {week:"20",dates:"Dec 22 - Dec 31",focusArea:"Discrete Mathematics",importantTopics:"Graph Theory, Combinatorics, Logic",weightage:"5%",detailed:"Graphs, Trees, Counting principles, Propositional & Predicate Logic"},
+  {week:"21",dates:"Jan 1 - Jan 7",focusArea:"Programming Practice",importantTopics:"Coding in C/C++/Java: Syntax, Loops, Functions",weightage:"10%",detailed:"Control structures, Arrays, Strings, Pointers, OOP concepts"},
+  {week:"22",dates:"Jan 8 - Jan 14",focusArea:"Aptitude & Reasoning",importantTopics:"Quantitative Aptitude, Logical Reasoning",weightage:"10%",detailed:"Number systems, Algebra, Probability, Puzzles, Blood relations, Directions"},
+  {week:"23",dates:"Jan 15 - Jan 21",focusArea:"Revision & Mock Tests",importantTopics:"Full syllabus revision + Mock test practice",weightage:"10%",detailed:"Full-length GATE mock tests, topic-wise revision, analyzing weak areas"},
+  {week:"24",dates:"Jan 22 - Jan 31",focusArea:"Final Revision & Strategy",importantTopics:"Focus on weak topics + Exam strategy",weightage:"-",detailed:"Quick revision, time management, question selection strategy, stress management"},
+];
+
+function groupByFocusArea(data) {
+  const map = {};
+  data.forEach(item => {
+    if(!map[item.focusArea]) map[item.focusArea] = [];
+    map[item.focusArea].push(item);
+  });
+  return map;
+}
+
+function createNode(text, hasChildren=true) {
+  const span = document.createElement('span');
+  span.className = 'node-content';
+  
+  if (hasChildren){
+    const arrow = document.createElement('span');
+    arrow.className = 'arrow';
+    arrow.textContent = '▶';
+    span.appendChild(arrow);
+  } else {
+    const dummy = document.createElement('span');
+    dummy.style.display = 'inline-block';
+    dummy.style.width = '12px';
+    span.appendChild(dummy);
+  }
+
+  const textSpan = document.createElement('span');
+  textSpan.className = 'node-text';
+  textSpan.innerHTML = text;
+  span.appendChild(textSpan);
+
+  return span;
+}
+
+function buildTree(containerId) {
+  const root = document.getElementById(containerId);
+  root.innerHTML = "";
+
+  const grouped = groupByFocusArea(syllabusData);
+
+  for (const [focusArea, weeks] of Object.entries(grouped)) {
+    const faLi = document.createElement('li');
+    const faNode = createNode(`<span class="node-focus">${focusArea}</span>`);
+    faLi.appendChild(faNode);
+
+    const weeksUl = document.createElement('ul');
+    weeksUl.classList.add("closed");
+
+    weeks.forEach(week => {
+      const wLi = document.createElement('li');
+      const wNodeText = `<span class="node-week">Week ${week.week} (${week.dates})</span> <span class="weightage">${week.weightage}</span>`;
+      const wNode = createNode(wNodeText);
+      wLi.appendChild(wNode);
+
+      const detailsUl = document.createElement('ul');
+      detailsUl.classList.add("closed");
+
+      const impLi = document.createElement('li');
+      impLi.innerHTML = `<div class="node-topics"><strong>Important Topics:</strong> ${week.importantTopics}</div>`;
+      impLi.style.paddingLeft = '36px';
+
+      const detLi = document.createElement('li');
+      detLi.innerHTML = `<div class="detail-box">${week.detailed}</div>`;
+
+      detailsUl.appendChild(impLi);
+      detailsUl.appendChild(detLi);
+
+      wLi.appendChild(detailsUl);
+
+      weeksUl.appendChild(wLi);
+
+      // Week node toggle
+      wNode.addEventListener('click', e => {
+        e.stopPropagation();
+        if(detailsUl.classList.contains('open')){
+          detailsUl.classList.remove('open');
+          wNode.querySelector('.arrow').classList.remove('open');
+        } else {
+          detailsUl.classList.add('open');
+          wNode.querySelector('.arrow').classList.add('open');
+        }
+      });
+    });
+
+    faLi.appendChild(weeksUl);
+
+    // Focus area toggle
+    faNode.addEventListener('click', e => {
+      e.stopPropagation();
+      if(weeksUl.classList.contains('open')){
+        weeksUl.classList.remove('open');
+        faNode.querySelector('.arrow').classList.remove('open');
+      } else {
+        weeksUl.classList.add('open');
+        faNode.querySelector('.arrow').classList.add('open');
+      }
+    });
+
+    root.appendChild(faLi);
+  }
+}
+
+buildTree("treeRoot");
+</script>
+</body>
+</html>
+
